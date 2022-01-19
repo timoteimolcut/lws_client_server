@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package messages;
+
+message ClientRequest
+{
+    string name = 1;
+    int32 age = 2;
+}
+
+message ServerResponse
+{
+    string name = 1;
+    int32 age = 2;
+}

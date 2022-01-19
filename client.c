@@ -7,6 +7,9 @@ static struct lws *web_socket = NULL;
 
 #define EXAMPLE_RX_BUFFER_BYTES (10)
 
+static int counter = 0;
+
+
 static int callback_example( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len )
 {
 	switch( reason )
@@ -23,7 +26,8 @@ static int callback_example( struct lws *wsi, enum lws_callback_reasons reason, 
 		{
 			unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + EXAMPLE_RX_BUFFER_BYTES + LWS_SEND_BUFFER_POST_PADDING];
 			unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];
-			size_t n = sprintf( (char *)p, "%u", rand() );
+			size_t n = sprintf( (char *)p, "%u", counter++ );
+			printf("from client: %s\n", p);
 			lws_write( wsi, p, n, LWS_WRITE_TEXT );
 			break;
 		}

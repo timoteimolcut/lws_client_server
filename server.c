@@ -1,6 +1,10 @@
+// #include "messages.pb.h"
+
 #include <libwebsockets.h>
 #include <string.h>
 #include <stdio.h>
+
+
 
 static int callback_http( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len )
 {
@@ -28,8 +32,18 @@ static int callback_example( struct lws *wsi, enum lws_callback_reasons reason, 
 	switch( reason )
 	{
 		case LWS_CALLBACK_RECEIVE:
-			memcpy( &received_payload.data[LWS_SEND_BUFFER_PRE_PADDING], in, len );
+			for (int i = 0; i < len; i++) {
+				received_payload.data[LWS_SEND_BUFFER_PRE_PADDING + (len - 1) - i ] = 
+					((char *) in)[i];
+			}
+			// memcpy( &received_payload.data[LWS_SEND_BUFFER_PRE_PADDING], in, len );
 			received_payload.len = len;
+			printf("received data: %.*s, replying: %.*s, len: %d\n", 
+			(int) len, 
+			(char *) in, 
+			(int) len, 
+			received_payload.data + LWS_SEND_BUFFER_PRE_PADDING,
+			(int) len);
 			lws_callback_on_writable_all_protocol( lws_get_context( wsi ), lws_get_protocol( wsi ) );
 			break;
 

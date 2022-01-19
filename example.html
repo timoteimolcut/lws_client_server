@@ -1,14 +1,57 @@
 <!DOCTYPE html>
 <html>
 <title>Websocket example</title>
-<script>
-  var socket = new WebSocket( "ws://" + document.domain + ':' + location.port, "example-protocol" );
-  function update(msg) { document.getElementById("num").innerHTML = msg; }
-  socket.onopen = function() { console.log("socket open"); update("open"); }
-  socket.onclose = function() { console.log("socket close"); update("closed"); }
-  socket.onmessage = function(msg) { console.log("socket message: " + msg.data); update(msg.data); }
+
+<script src="./require.js"></script>
+<!-- <script src="./google-protobuf.js"></script> -->
+
+<script type="text/javascript">
+
+
+  // var messages_module = require('./messages_pb.js');
+
+  require(['./google-protobuf.js'], function (a) {
+    //foo is now loaded.
+  });
+
+  require(['./messages_pb.js'], function (b) {
+    //foo is now loaded.
+  });
+
+
+
+  // ws://127.0.0.1:8000
+  var myWebSocket = new WebSocket( "ws://" + document.domain + ':' + 8000, "example-protocol" );
+  function update(msg) { 
+    document.getElementById("num").innerHTML = msg; 
+  }
+  myWebSocket.onopen = function() { 
+    console.log("socket is open"); 
+    update("open"); 
+  }
+  myWebSocket.onclose = function() { 
+    console.log("socket close"); 
+    update("closed"); 
+  }
+  myWebSocket.onmessage = function(msg) { 
+    console.log("receiving: |" + msg.data + "|"); 
+    // update(msg.data); 
+  }
+
+  function sendData(){
+    var randNum = Math.random();
+    console.log(randNum);
+    randNum *= 1000000;
+    randNum = Math.floor( randNum );
+    myWebSocket.send(randNum);
+    console.log('sending: |'+ randNum + "|");
+  }
+
 </script>
 <body>
-<p id="num"></p>
+  <div>
+    <p id="num"></p>
+    <button onclick="sendData()"> Send </button>
+  </div>
 </body>
 </html>
