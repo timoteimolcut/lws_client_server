@@ -27,3 +27,7 @@ In another terminal run:
 
 Then navigate to localhost:8000 in your web browser. You should see a random number being
 updated every second.
+
+
+
+Call `browserify main.js -o bundle.js` whenever you need to modify main.js.

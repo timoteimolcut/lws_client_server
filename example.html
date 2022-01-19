@@ -2,49 +2,55 @@
 <html>
 <title>Websocket example</title>
 
-<script src="./require.js"></script>
-<!-- <script src="./google-protobuf.js"></script> -->
+<script type="text/javascript" src="bundle.js"></script>
 
 <script type="text/javascript">
+  var message;
+
+  message = new Acme.buffer_pb.ClientRequest();
+  // message.setName("Tim");
 
 
-  // var messages_module = require('./messages_pb.js');
-
-  require(['./google-protobuf.js'], function (a) {
-    //foo is now loaded.
-  });
-
-  require(['./messages_pb.js'], function (b) {
-    //foo is now loaded.
-  });
-
-
+  // console.log("from js client: " + message)
+  var bytes = message.serializeBinary();
+  // console.log("from js client: " + bytes)
 
   // ws://127.0.0.1:8000
-  var myWebSocket = new WebSocket( "ws://" + document.domain + ':' + 8000, "example-protocol" );
+  
+  var ip, port;
+  // ip = '127.0.0.1';
+  // port = 8000;
+
+  ip = '10.42.0.190';
+  port = 5000;
+  var myWebSocket = new WebSocket( "ws://" + ip + ':' + port, "network-protocol");
+  
   function update(msg) { 
     document.getElementById("num").innerHTML = msg; 
   }
   myWebSocket.onopen = function() { 
     console.log("socket is open"); 
-    update("open"); 
+    // update("open"); 
   }
   myWebSocket.onclose = function() { 
-    console.log("socket close"); 
-    update("closed"); 
+    console.log("socket is closed"); 
+    // update("closed"); 
   }
   myWebSocket.onmessage = function(msg) { 
-    console.log("receiving: |" + msg.data + "|"); 
-    // update(msg.data); 
+    var response = Acme.buffer_pb.ServerResponse.deserializeBinary(msg.data);
+    // var response = msg.data;
+    console.log("receiving: |" + response + "|"); 
   }
 
   function sendData(){
-    var randNum = Math.random();
-    console.log(randNum);
-    randNum *= 1000000;
-    randNum = Math.floor( randNum );
-    myWebSocket.send(randNum);
-    console.log('sending: |'+ randNum + "|");
+    // var randNum = Math.random();
+    // console.log("random number: " + randNum);
+    // randNum *= 1000000;
+    // randNum = Math.floor( randNum );
+    // myWebSocket.send(randNum);
+    // console.log('sending: |'+ randNum + "|");
+
+    myWebSocket.send(bytes);
   }
 
 </script>
