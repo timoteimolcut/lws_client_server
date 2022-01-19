@@ -32,7 +32,7 @@ updated every second.
 
 Call `browserify main.js -o bundle.js` whenever you need to modify main.js.
 
-Instalation of dependencies
+## Instalation of dependencies
 ```bash
 npm install google-protobuf
 npm install browserify
